@@ -1,0 +1,44 @@
+{
+  "name": "agentblack_api",
+  "description": "This repository contains the Agent Black API. All code is written in [Node.js](https://nodejs.org/). The API is written in [Express](https://expressjs.com/).",
+  "version": "1.0.0",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/FlippedCodes/AgentBlack_API.git"
+  },
+  "keywords": [],
+  "author": {
+    "name": "FlippedCodes",
+    "url": "https://github.com/FlippedCodes"
+  },
+  "contributors": [
+    {
+      "name": "FlipperLP",
+      "url": "https://github.com/FlipperLP"
+    },
+    {
+      "name": "Coder-Tavi",
+      "url": "https://github.com/Coder-Tavi"
+    }
+  ],
+  "license": "GNU General Public License v3",
+  "bugs": {
+    "url": "https://github.com/FlippedCodes/AgentBlack_API/issues"
+  },
+  "homepage": "https://github.com/FlippedCodes/AgentBlack_API#readme",
+  "dependencies": {
+    "ascii-table": "^0.0.9",
+    "express": "^4.18.1",
+    "fs": "^0.0.1-security",
+    "mysql2": "^2.3.3",
+    "node-fetch": "^2.6.7",
+    "sequelize": "^6.20.1"
+  },
+  "devDependencies": {
+    "eslint": "^8.17.0"
+  }
+}
