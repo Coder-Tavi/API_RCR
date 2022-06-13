@@ -104,7 +104,7 @@ module.exports = {
         });
       }
     } else if(endpoint === "delete") {
-      // Check if they can REVOKE_TOkEN
+      // Check if they can REVOKE_TOKEN
       const permissions = await req.user.getPermissions();
       if(!permissions.includes("REVOKE_TOKEN")) return res.status(403).send({
         success: false,
