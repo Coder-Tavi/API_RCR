@@ -1,16 +1,16 @@
 module.exports = {
   sequelizeConf: {
-    username: process.env.DB_USERNAME,
-    password: process.env.DB_PASSWORD,
-    database: process.env.DB_NAME,
-    host: process.env.DB_HOST,
+    username: process.argv.DB_USERNAME,
+    password: process.argv.DB_PASSWORD,
+    database: process.argv.DB_NAME,
+    host: process.argv.DB_HOST,
     dialect: "mysql"
   },
   discordConf: {
-    client_id: process.env.DISCORD_CLIENT_ID,
-    client_secret: process.env.DISCORD_CLIENT_SECRET,
-    redirect_uri: process.env.DISCORD_REDIRECT_URI,
-    logWebhook: process.env.DISCORD_WEBHOOK_URL,
-    token: process.env.DISCORD_BOT_TOKEN
+    client_id: process.argv.DISCORD_CLIENT_ID,
+    client_secret: process.argv.DISCORD_CLIENT_SECRET,
+    redirect_uri: process.argv.DISCORD_REDIRECT_URI,
+    logWebhook: process.argv.DISCORD_WEBHOOK_URL,
+    token: process.argv.DISCORD_BOT_TOKEN
   }
 };
