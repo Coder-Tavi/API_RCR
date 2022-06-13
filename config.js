@@ -1,16 +1,16 @@
 module.exports = {
   sequelizeConf: {
-    username: process.argv.DB_USERNAME,
-    password: process.argv.DB_PASSWORD,
-    database: process.argv.DB_NAME,
-    host: process.argv.DB_HOST,
+    username: process.argv.find(v => v.startsWith("DB_USERNAME")).split("=")[1],
+    password: process.argv.find(v => v.startsWith("DB_PASSWORD")).split("=")[1],
+    database: process.argv.find(v => v.startsWith("DB_NAME")).split("=")[1],
+    host: process.argv.find(v => v.startsWith("DB_HOST")).split("=")[1],
     dialect: "mysql"
   },
   discordConf: {
-    client_id: process.argv.DISCORD_CLIENT_ID,
-    client_secret: process.argv.DISCORD_CLIENT_SECRET,
-    redirect_uri: process.argv.DISCORD_REDIRECT_URI,
-    logWebhook: process.argv.DISCORD_WEBHOOK_URL,
-    token: process.argv.DISCORD_BOT_TOKEN
+    client_id: process.argv.find(v => v.startsWith("DISCORD_CLIENT_ID")).split("=")[1],
+    client_secret: process.argv.find(v => v.startsWith("DISCORD_CLIENT_SECRET")).split("=")[1],
+    redirect_uri: process.argv.find(v => v.startsWith("DISCORD_REDIRECT_URI")).split("=")[1],
+    logWebhook: process.argv.find(v => v.startsWith("DISCORD_WEBHOOK_URL")).split("=")[1],
+    token: process.argv.find(v => v.startsWith("DISCORD_BOT_TOKEN")).split("=")[1],
   }
 };
