@@ -7,7 +7,7 @@ module.exports = {
   GET: /\/v1\/tokens\/(create|check|validate)/,
   DELETE: /\/v1\/tokens\/delete/,
   run: async (req, res) => {
-    const endpoint = req.path.replace("/tokens/", "");
+    const endpoint = req.path.replace("/v1/tokens/", "");
     if(endpoint === "create") {
       const { code } = req.query;
       if(!code) return res.status(400).send({

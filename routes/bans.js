@@ -5,7 +5,7 @@ module.exports = {
   POST: /\/v1\/bans\/(add|check)/,
   DELETE: /\/v1\/bans\/delete/,
   run: async (req, res) => {
-    const endpoint = req.path.replace("/bans/", "");
+    const endpoint = req.path.replace("/v1/bans/", "");
     if (endpoint === "check") {
       const { robloxId } = req.query;
       if (!robloxId) return res.status(400).send({
