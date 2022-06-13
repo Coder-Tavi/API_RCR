@@ -142,16 +142,13 @@ app.all("*", (req, res) => {
 //#endregion
 
 //#region Start up
-(async () => {
-  await require("util").promisify(setTimeout)(500); // Wait for database to load
-  https.createServer({
-    key: readFileSync(sslConf.key),
-    cert: readFileSync(sslConf.cert)
-  }, app).listen(443, () => {
-    console.info("[START] HTTPS listening on port 443!");
-  });
-  console.info(`[START] Started at: ${new Date()}`);
+https.createServer({
+  key: readFileSync(sslConf.key),
+  cert: readFileSync(sslConf.cert)
+}, app).listen(443, () => {
+  console.info("[START] HTTPS listening on port 443!");
 });
+console.info(`[START] Started at: ${new Date()}`);
 //#endregion
 
 //#region Error handling
