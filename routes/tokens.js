@@ -72,7 +72,7 @@ module.exports = {
         }
         await req.models.Token.update({
           token: token
-        }, { where: { userId: req.user.id } });
+        }, { where: { userId: user.userId } });
         req.user = new User(user);
         return res.status(200).send({
           README: "WARNING! This token will be shown only once (Which is right now). If you forget it, you will have to reauthorize with Discord and create a new one",
