@@ -30,7 +30,7 @@ module.exports = {
           success: false,
           message: discordUser.error
         });
-      const banned = await req.models.TokenBan.findOne({ where: { userId: discordUser.id } });
+      const banned = await req.models.TokenBan.findOne({ where: { discordId: discordUser.id } });
       if(banned != undefined) return res.status(403).send({
         success: false,
         message: "You are banned from using the API",
