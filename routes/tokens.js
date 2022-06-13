@@ -62,7 +62,7 @@ module.exports = {
           }
         });
       } else {
-        const user = await req.models.User.update({
+        await req.models.User.update({
           discord_access_token: discordToken.access_token,
           discord_refresh_token: discordToken.refresh_token
         }, { where: { discordId: discordUser.id } }); 
@@ -70,9 +70,10 @@ module.exports = {
         while (await req.models.Token.findOne({ where: { token: token } }) != null) {
           token = `NszKJZedPgq${Math.random().toString(36).substring(2, 15)}.${Math.random().toString(36).substring(2, 15)+Math.random().toString(36).substring(2, 15)+Math.random().toString(36).substring(2, 15)}`;
         }
+        const user = await req.models.User.findOne({ where: { discordId: discordUser.id } });
         await req.models.Token.update({
           token: token
-        }, { where: { userId: req.user.id } });
+        }, { where: { userId: user.userId } });
         req.user = new User(user);
         return res.status(200).send({
           README: "WARNING! This token will be shown only once (Which is right now). If you forget it, you will have to reauthorize with Discord and create a new one",
