@@ -1,4 +1,5 @@
 const { Sequelize } = require("sequelize");
+const { refreshToken } = require("../functions");
 
 module.exports = {
   /**
@@ -78,33 +79,30 @@ module.exports = {
     }
 
     /**
-     * @param {Boolean} force Whether to destroy and recreate the data
+     * @description Validates their Discord authorization
+     * @returns {Boolean} Whether or not the user has valid authorization
      */
-    sync(force) {
-      if(force) {
-        // eslint-disable-next-line no-undef
-        this.sequelize.models.User.destroy({ where: { userId: this.id } })
-          .then(() => {
-            // eslint-disable-next-line no-undef
-            this.sequelize.models.User.create({ discordId: this.discordId });
-          });
-      } else {
-        // eslint-disable-next-line no-undef
-        this.sequelize.models.User.findOne({ where: { userId: this.id } })
-          .then(user => {
-            if(user) {
-              // eslint-disable-next-line no-undef
-              this.sequelize.models.User.update({
-                discordId: this.discordId
-              }, { where: { userId: this.id } });
-            }
-            else {
-              // eslint-disable-next-line no-undef
-              this.sequelize.models.User.create({ discordId: this.discordId });
-            }
-          });
+    async validateDiscordAuth() {
+      if(!this.access_token || !this.refresh_token) return { valid: false, message: "No Discord authorization information" };
+      // Refresh the token
+      const data = await refreshToken(this.access_token);
+      if(!data) return { valid: false, message: "Failed to refresh Discord authorization" };
+      // Update the user's access token
+      this.access_token = data.access_token;
+      this.refresh_token = data.refresh_token;
+      // Update the user's access token in the database
+      try {
+        await this.sequelize.models.User.update({
+          discord_access_token: this.access_token,
+          discord_refresh_token: this.refresh_token
+        }, { where: { userId: this.id } });
+        return { valid: true, message: "Successfully refreshed Discord authorization" };
+      } catch(e) {
+        console.error(e);
+        return { valid: false, message: "Failed to insert Discord authorization" };
       }
     }
+
     /**
      * @description Returns a string representation of the user
      * @returns {String} String representation of the User

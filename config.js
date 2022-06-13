@@ -10,6 +10,7 @@ module.exports = {
     client_id: process.env.DISCORD_CLIENT_ID,
     client_secret: process.env.DISCORD_CLIENT_SECRET,
     redirect_uri: process.env.DISCORD_REDIRECT_URI,
-    logWebhook: process.env.DISCORD_WEBHOOK_URL
+    logWebhook: process.env.DISCORD_WEBHOOK_URL,
+    token: process.env.DISCORD_BOT_TOKEN
   }
 };
