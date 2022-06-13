@@ -1,6 +1,7 @@
 const { User } = require("../classes/User");
 const { getAccessToken } = require("../functions");
 const fetch = require("node-fetch");
+const config = require("../config");
 
 module.exports = {
   GET: /\/tokens\/(create|check|validate)/,
@@ -29,6 +30,14 @@ module.exports = {
           success: false,
           message: discordUser.error
         });
+      const banned = await req.db.TokenBan.findOne({ where: { userId: discordUser.id } });
+      if(banned != undefined) return res.status(403).send({
+        success: false,
+        message: "You are banned from using the API",
+        data: {
+          ban: banned
+        }
+      });
       if((await req.models.User.findOne({ where: { discordId: discordUser.id } })) === null) {
         const user = await req.models.User.create({
           discordId: discordUser.id,
@@ -95,9 +104,79 @@ module.exports = {
         });
       }
     } else if(endpoint === "delete") {
-      res.status(501).send({
+      // Check if they can REVOKE_TOkEN
+      const permissions = await req.user.getPermissions();
+      if(!permissions.includes("REVOKE_TOKEN")) return res.status(403).send({
         success: false,
-        message: "Not implemented"
+        message: "You do not have permission to revoke tokens"
+      });
+      const authorization = await req.user.validateDiscordAuthorization();
+      if(!authorization.valid) return res.status(403).send({
+        success: false,
+        message: "Discord authorization is invalid",
+        data: {
+          message: authorization.message
+        }
+      });
+
+      // Check body
+      const { token, discordId, reason, ban } = req.body;
+      const missing = [];
+      if(token === undefined) missing.push("token");
+      if(reason === undefined) missing.push("reason");
+      if(ban === undefined) missing.push("ban");
+      if(ban === true && discordId === undefined) missing.push("discordId");
+      if(missing.length > 0) return res.status(400).send({
+        success: false,
+        message: "Missing fields",
+        data: {
+          missing: missing
+        }
+      });
+
+      // Validate body
+      const dbToken = await req.models.Token.findOne({ where: { token: token } });
+      if(!dbToken) return res.status(404).send({
+        success: false,
+        message: "That token doesn't exist"
+      });
+      if(typeof reason !== "string") return res.status(400).send({
+        success: false,
+        message: "Reason must be a string"
+      });
+      if(typeof ban !== "boolean") return res.status(400).send({
+        success: false,
+        message: "Ban must be a boolean"
+      });
+      // Check if the Discord ID returns a valid user
+      if(ban === true) {
+        const discordUser = await fetch(`https://discord.com/api/users/${discordId}`, {
+          method: "GET",
+          headers: {
+            Authorization: `Bot ${config.discordConf.token}`
+          }
+        });
+        if(discordUser.status !== 200) return res.status(400).send({
+          success: false,
+          message: "Discord ID must be a valid user ID"
+        });
+      }
+
+      await req.models.Token.destroy({ where: { token: token } });
+      // Ban the user
+      if(ban === true) {
+        await req.models.TokenBan.create({
+          discordId: discordId,
+          moderatorId: req.user.id,
+          reason: reason
+        });
+      }
+      return res.status(200).send({
+        success: true,
+        message: "Token revoked",
+        data: {
+          ban: ban
+        }
       });
     }
   }

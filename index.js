@@ -1,12 +1,11 @@
 const // Imports
-  { NotFoundError } = require("./classes/Errors.js"),
   { Sequelize } = require("sequelize"),
   { User } = require("./classes/User.js"),
-  { toConsole } = require("./functions.js"),
   { readdirSync, existsSync, mkdirSync } = require("fs"),
   { sequelizeConf } = require("./config.js"),
   express = require("express"),
   app = express(),
+  bodyparser = require("body-parser"),
   sequelize = new Sequelize(sequelizeConf),
   methods = {"GET":[],"POST":[],"DELETE":[]};
 let // Temp vars
@@ -45,13 +44,14 @@ let // Temp vars
 //#endregion
 
 //#region Routing
+// Body parser for JSON
+app.use(bodyparser.json({ type: "*/json" }));
 // Authorisation
 app.use(async (req, res, next) => {
   req.sequelize = sequelize;
   req.models = sequelize.models;
   const bypassRoutes = [/^\/$/, /\/tokens\/create/];
   if(bypassRoutes.some(route => req.originalUrl.match(route))) req.headers.authorization = "Bearer X";
-  await toConsole(bypassRoutes.some(r => req.originalUrl.match(r)), new Error().stack);
   console.info(`[ROUTE] Incoming challenge ${req.get("Authorization") === null || req.get("Authorization") === "Bearer X" ? "without auth" : "with auth"} at {${req.originalUrl}} from {${req.ip}}`);
   if(!req.get("Authorization") || !req.get("Authorization").trim().startsWith("Bearer")) {
     res.status(401).send({
@@ -69,6 +69,11 @@ app.use(async (req, res, next) => {
       });
     req.user = new User(user);
     next();
+    await require("node:util").promisify(setTimeout)(10000);
+    if(!res.headersSent) return res.status(500).send({
+      success: false,
+      message: "Internal server error. Please try again later"
+    });
   }
 });
 
@@ -127,8 +132,10 @@ app.options("*", (req, res) => {
 })();
 app.all("*", (req, res) => {
   console.info(`[ROUTE] Unhandled request at {${req.originalUrl}} from {${req.ip}}`);
-  const e = new NotFoundError(`${req.originalUrl} (Method: ${req.method}) was not found on the server`, new Error().stack);
-  res.status(404).send(e.generateJSON());
+  res.status(404).send({
+    success: false,
+    message: `${req.originalUrl} (Method: ${req.method}) was not found on the server`
+  });
 });
 //#endregion
 
