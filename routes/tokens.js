@@ -111,7 +111,7 @@ module.exports = {
         success: false,
         message: "You do not have permission to revoke tokens"
       });
-      const authorization = await req.user.validateDiscordAuthorization();
+      const authorization = await req.user.validateDiscordAuth();
       if(!authorization.valid) return res.status(403).send({
         success: false,
         message: "Discord authorization is invalid",

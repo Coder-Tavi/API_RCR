@@ -36,7 +36,7 @@ module.exports = {
         success: false,
         message: "You do not have permission to create bans"
       });
-      const authorization = await req.user.validateDiscordAuthorization();
+      const authorization = await req.user.validateDiscordAuth();
       if(!authorization.valid) return res.status(403).send({
         success: false,
         message: "Discord authorization is invalid",
@@ -116,7 +116,7 @@ module.exports = {
         success: false,
         message: "You do not have permission to delete bans"
       });
-      const authorization = await req.user.validateDiscordAuthorization();
+      const authorization = await req.user.validateDiscordAuth();
       if(!authorization.valid) return res.status(403).send({
         success: false,
         message: "Discord authorization is invalid",
