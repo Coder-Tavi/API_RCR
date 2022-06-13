@@ -12,5 +12,9 @@ module.exports = {
     redirect_uri: process.argv.find(v => v.startsWith("DISCORD_REDIRECT_URI")).split("=")[1],
     logWebhook: process.argv.find(v => v.startsWith("DISCORD_WEBHOOK_URL")).split("=")[1],
     token: process.argv.find(v => v.startsWith("DISCORD_BOT_TOKEN")).split("=")[1],
+  },
+  sslConf: {
+    key: process.argv.find(v => v.startsWith("SSL_KEY")).split("=")[1],
+    cert: process.argv.find(v => v.startsWith("SSL_CERT")).split("=")[1]
   }
 };

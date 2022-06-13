@@ -1,11 +1,12 @@
 const // Imports
   { Sequelize } = require("sequelize"),
   { User } = require("./classes/User.js"),
-  { readdirSync, existsSync, mkdirSync } = require("fs"),
-  { sequelizeConf } = require("./config.js"),
+  { readdirSync, readFileSync, existsSync, mkdirSync } = require("fs"),
+  { sequelizeConf, sslConf } = require("./config.js"),
   express = require("express"),
   app = express(),
   bodyparser = require("body-parser"),
+  https = require("node:https"),
   sequelize = new Sequelize(sequelizeConf),
   methods = {"GET":[],"POST":[],"DELETE":[]};
 let // Temp vars
@@ -79,7 +80,7 @@ app.use(async (req, res, next) => {
 });
 
 // Static routes
-app.get("/", async (_req, res) => {
+app.get(/\/(v1\/){0,1}/, async (_req, res) => {
   res.redirect("https://docs.tavis.page");
 });
 app.get("/favicon.ico", async (_req, res) => {
@@ -141,8 +142,14 @@ app.all("*", (req, res) => {
 //#endregion
 
 //#region Start up
-app.listen(80, () => {
-  console.info("[START] Example app listening on port 80!");
+(async () => {
+  await require("util").promisify(setTimeout)(500); // Wait for database to load
+  https.createServer({
+    key: readFileSync(sslConf.key),
+    cert: readFileSync(sslConf.cert)
+  }, app).listen(443, () => {
+    console.info("[START] HTTPS listening on port 443!");
+  });
   console.info(`[START] Started at: ${new Date()}`);
 });
 //#endregion
