@@ -4,8 +4,8 @@ const fetch = require("node-fetch");
 const config = require("../config");
 
 module.exports = {
-  GET: /\/tokens\/(create|check|validate)/,
-  DELETE: /\/tokens\/delete/,
+  GET: /\/v1\/tokens\/(create|check|validate)/,
+  DELETE: /\/v1\/tokens\/delete/,
   run: async (req, res) => {
     const endpoint = req.path.replace("/tokens/", "");
     if(endpoint === "create") {

@@ -1,9 +1,9 @@
 const fetch = require("node-fetch");
 
 module.exports = {
-  GET: /\/bans\/check/,
-  POST: /\/bans\/(add|check)/,
-  DELETE: /\/bans\/delete/,
+  GET: /\/v1\/bans\/check/,
+  POST: /\/v1\/bans\/(add|check)/,
+  DELETE: /\/v1\/bans\/delete/,
   run: async (req, res) => {
     const endpoint = req.path.replace("/bans/", "");
     if (endpoint === "check") {
@@ -54,7 +54,7 @@ module.exports = {
       if(proof === undefined) missing.push("proof");
       if(missing.length > 0) return res.status(400).send({
         success: false,
-        message: "Missing data",
+        message: "Missing fields",
         data: {
           missing: missing
         }
@@ -69,7 +69,7 @@ module.exports = {
         success: false,
         message: "reason must be a string"
       });
-      if(typeof appealable != "boolean") return res.status(400).send({
+      if(appealable != undefined && typeof appealable != "boolean") return res.status(400).send({
         success: false,
         message: "appealable must be a boolean"
       });
@@ -86,9 +86,9 @@ module.exports = {
 
       // Check if a user exists
       const user = await fetch(`https://api.roblox.com/users/${robloxId}`);
-      if(user.status === 400) return res.status(400).send({
+      if(user.status === 400) return res.status(404).send({
         success: false,
-        message: "User does not exist"
+        message: "robloxId is not a valid Roblox user ID"
       });
 
       // Create the ban
@@ -126,14 +126,19 @@ module.exports = {
       });
 
       // Check for valid data
-      const { banId } = req.body;
+      const { banId } = req.query;
       if(!banId) return res.status(400).send({
         success: false,
-        message: "Missing ban ID"
+        message: "banId is a required parameter"
       });
+      if(typeof banId != "number") return res.status(400).send({
+        success: false,
+        message: "banId must be a number"
+      });
+
       // Check if a ban by that ID exists
       const ban = await req.models.Ban.findOne({ where: { banId: banId } });
-      if(!ban) return res.status(400).send({
+      if(!ban) return res.status(404).send({
         success: false,
         message: "Ban does not exist"
       });

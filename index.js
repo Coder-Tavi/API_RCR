@@ -53,6 +53,7 @@ app.use(async (req, res, next) => {
   const bypassRoutes = [/^\/$/, /\/tokens\/create/];
   if(bypassRoutes.some(route => req.originalUrl.match(route))) req.headers.authorization = "Bearer X";
   console.info(`[ROUTE] Incoming challenge ${req.get("Authorization") === null || req.get("Authorization") === "Bearer X" ? "without auth" : "with auth"} at {${req.originalUrl}} from {${req.ip}}`);
+  res.set("WWW-Authenticate", "Bearer");
   if(!req.get("Authorization") || !req.get("Authorization").trim().startsWith("Bearer")) {
     res.status(401).send({
       success: false,
