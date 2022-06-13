@@ -80,7 +80,7 @@ app.use(async (req, res, next) => {
 });
 
 // Static routes
-app.get(/\/(v1\/){0,1}/, async (_req, res) => {
+app.get(/\/(v1){0,1}\/{0,1}$/, async (_req, res) => {
   res.redirect("https://docs.tavis.page");
 });
 app.get("/favicon.ico", async (_req, res) => {
