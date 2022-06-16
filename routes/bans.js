@@ -131,7 +131,7 @@ module.exports = {
         success: false,
         message: "banId is a required parameter"
       });
-      if(typeof banId != "number") return res.status(400).send({
+      if(isNaN(Math.floor(parseInt(banId)))) return res.status(400).send({
         success: false,
         message: "banId must be a number"
       });

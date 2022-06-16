@@ -29,6 +29,8 @@ module.exports = {
       if(!data.sequelize || !data.sequelize.authenticate()) return new SyntaxError("Cannot create a User object with an invalid Sequelize object");
       this.id = data.userId;
       this.discordId = data.discordId;
+      this.access_token = data.discord_access_token ?? "";
+      this.refresh_token = data.discord_refresh_token ?? "";
       this.sequelize = data.sequelize;
     }
 
@@ -85,7 +87,7 @@ module.exports = {
     async validateDiscordAuth() {
       if(!this.access_token || !this.refresh_token) return { valid: false, message: "No Discord authorization information" };
       // Refresh the token
-      const data = await refreshToken(this.access_token);
+      const data = await refreshToken(this.refresh_token);
       if(!data) return { valid: false, message: "Failed to refresh Discord authorization" };
       // Update the user's access token
       this.access_token = data.access_token;
