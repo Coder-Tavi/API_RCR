@@ -25,8 +25,8 @@ Before installing the project, you will need the following. Some have been marke
 ### Installation
 To install the bot's code, please use the following commands.
 
-1. `git clone https://github.com/FlippedCodes/AgentBlack_API`
-2. `cd AgentBlack_API`
+1. `git clone https://github.com/Coder-Tavi/API_RCA`
+2. `cd API_RCA`
 3. `npm install`
 
 **Important!** You must set the following environment variables when running the command below:
@@ -50,7 +50,7 @@ To validate your code against the ESLint configuration, please use the following
 Since this bot operates on Discord's slash commands, all commands can be viewed by typing `/` into the Discord chat bar. You will see a list of commands appear for the different bots. Scroll until you see the bot's. All available commands will be listed there.
 
 ## License ##
-FlippedCodes/AgentBlack_API is licensed under the GNU General Public License v3.0. You can find more details about the license and where to find it in the file titled "LICENSE" in the primary directory.
+Coder-Tavi/API_RCA is licensed under the GNU General Public License v3.0. You can find more details about the license and where to find it in the file titled "LICENSE" in the primary directory.
 
 ## Credits ##
 This bot was made possible thanks to the following people:
