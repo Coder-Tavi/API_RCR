@@ -7,7 +7,7 @@ updates:
     assignees:
       - "coder-tavi"
     commit-message:
-      prefix: "dependabot: "
+      prefix: "chore:"
     ignore:
       - dependency-name: "node-fetch"
         versions: ["3.x"]
