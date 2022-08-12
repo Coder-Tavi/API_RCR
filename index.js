@@ -2,7 +2,7 @@ const // Imports
   { Sequelize } = require("sequelize"),
   { User } = require("./classes/User.js"),
   { readdirSync, readFileSync, existsSync, mkdirSync } = require("fs"),
-  { sequelizeConf, sslConf } = require("./config.js"),
+  { sequelizeConf, sslConf } = require("./config.json"),
   express = require("express"),
   app = express(),
   bodyparser = require("body-parser"),

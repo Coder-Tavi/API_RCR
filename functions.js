@@ -1,5 +1,5 @@
 const fetch = require("node-fetch");
-const { discordConf } = require("./config.js");
+const { discordConf } = require("./config.json");
 
 module.exports = {
   /** @param {String} code */
