@@ -33,7 +33,7 @@
     "fs": "^0.0.1-security",
     "mysql2": "^2.3.3",
     "node-fetch": "^2.6.7",
-    "sequelize": "^6.21.3"
+    "sequelize": "^6.21.4"
   },
   "devDependencies": {
     "eslint": "^8.21.0"
